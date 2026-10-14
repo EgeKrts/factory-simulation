@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tekstil Fabrikası 3D Simülasyonu</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app" class="collapse-left collapse-right collapse-log">
+    <header id="topbar">
+      <div class="brand"><span class="brand-icon">▥</span> <b>DOKUMA<span>FABRİKA SİMÜLASYONU</span></b> <span id="srcKind" class="tag">CANLI SAHA</span></div>
+      <div class="clock"><b id="clock">06:00</b><span id="shift">1. Vardiya</span></div>
+      <div class="group" id="speedGroup">
+        <button data-speed="0" title="Duraklat (Boşluk)">⏸</button>
+        <button data-speed="1">1x</button>
+        <button data-speed="5">5x</button>
+        <button data-speed="20" class="on">20x</button>
+        <button data-speed="60">60x</button>
+        <button data-speed="180">180x</button>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><label>Boyanan</label><b id="kProduced">0 kg</b></div>
+        <div class="kpi"><label>Sevk (palet)</label><b id="kPallets">0</b></div>
+        <div class="kpi"><label>WIP</label><b id="kWip">0</b></div>
+        <div class="kpi"><label>Hat kullanımı</label><b id="kUtil">0%</b></div>
+        <div class="kpi"><label>Red</label><b id="kRej">0</b></div>
+        <div class="kpi"><label>Buhar</label><b id="kSteam">-</b></div>
+        <div class="kpi"><label>Boya stoğu</label><b id="kDye">-</b></div>
+      </div>
+      <div class="group">
+        <button id="btnLeft" title="Makine menüsünü aç / kapat (M)" aria-controls="left" aria-expanded="false">☰ Makineler</button>
+        <button id="btnFullscreen" title="Tam ekran (F)" aria-label="Tam ekranı aç" aria-pressed="false">⛶ Tam ekran</button>
+        <button id="btnOverview" title="Genel görünüm">Yerleşke</button>
+        <button id="btnCapture" title="Görünümü PNG olarak kaydet">Görsel ↓</button>
+        <select id="buildingSelect" aria-label="Bina seç"><option value="">Tüm yerleşke</option></select>
+        <select id="lightMode" aria-label="Işık modu"><option value="auto">Otomatik ışık</option><option value="day" selected>Gündüz</option><option value="night">Gece</option></select>
+        <label class="chk"><input type="checkbox" id="chkLabels" checked />Etiket</label>
+        <label class="chk"><input type="checkbox" id="chkArrows" />Akış</label>
+        <label class="chk"><input type="checkbox" id="chkPipes" />Boru akışı</label>
+        <label class="chk"><input type="checkbox" id="chkFaults" checked />Arıza</label>
+        <button id="btnEdit" class="accent">✏️ Düzenle</button>
+        <button id="btnRight" title="İnceleme panelini aç / kapat">ⓘ</button>
+        <button id="btnLog" title="Olay günlüğünü aç / kapat">≡</button>
+      </div>
+    </header>
+
+    <aside id="left" inert><div class="menu-heading"><h3>Alanlar &amp; Makineler</h3><button id="btnCloseLeft" title="Makine menüsünü kapat" aria-label="Makine menüsünü kapat">×</button></div><div id="tree"></div></aside>
+
+    <main id="stage">
+      <details id="powerPanel" open>
+        <summary>Güneş · Batarya · Şebeke</summary>
+        <div id="powerLive">Elektrik sistemi hazırlanıyor…</div>
+        <label><input type="checkbox" id="exportEnabled" checked> Fazla enerjiyi şebekeye sat</label>
+        <div class="powerRates"><label>Satış TL/kWh <input id="sellPrice" type="number" min="0" step="0.1" value="2.5"></label><label>Alış TL/kWh <input id="buyPrice" type="number" min="0" step="0.1" value="4"></label></div>
+        <small>Kurgusal senaryo tarifesi · Üretim simülasyon saatine bağlıdır.</small>
+      </details>
+      <canvas id="c"></canvas>
+      <div id="sceneCaption"><div class="eyebrow" id="sceneEyebrow">ENDÜSTRİYEL YERLEŞKE</div><h1 id="sceneTitle">TEKSTİL YERLEŞKESİ</h1><p id="sceneSubtitle">240 × 180 m · 6 bina</p></div>
+      <output id="performance" aria-label="Görüntü performansı"></output>
+      <div id="editbar" hidden>
+        <select id="addType"></select>
+        <button id="btnAdd">➕ Ekle</button>
+        <span class="sep"></span>
+        <button id="btnMove" class="on" title="G">Taşı</button>
+        <button id="btnRotate" title="R">Döndür</button>
+        <span class="sep"></span>
+        <button id="btnExport">⬇ JSON</button>
+        <button id="btnImport">⬆ JSON</button>
+        <button id="btnReset">↺ Sıfırla</button>
+        <input type="file" id="fileImport" accept=".json" hidden />
+      </div>
+      <div id="toast"></div>
+      <div id="hint">Fare: döndür / yakınlaş · WASD: kaydır · M: makineler · F: tam ekran · Boşluk: duraklat</div>
+    </main>
+
+    <aside id="right"><div id="inspector"><p class="muted">Bir makine seçin.</p></div></aside>
+    <footer id="bottom"><h3>Olay Günlüğü</h3><div id="log"></div></footer>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

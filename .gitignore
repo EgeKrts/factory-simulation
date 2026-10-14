@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.artifacts/
+
+# Generated simulation bundle and local configuration
+scripts/simtest.cjs
+.env
+.env.*
+!.env.example
+*.log

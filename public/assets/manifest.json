@@ -1,0 +1,41 @@
+{
+  "machines": {
+    "ht_jet": "ht.glb",
+    "stenter": "ramoz.glb",
+    "compactor": "kompaktor.glb",
+    "inspection": "kumas-kontrol.glb",
+    "cart": "kumas-araba.glb",
+    "boiler": "buhar-kazani.glb",
+    "dyeprep": "boya-hazirlama.glb",
+    "truck_out": "kamyon.glb",
+    "cut": "konfeksiyon/kesim-makinesi.glb",
+    "sew": "konfeksiyon/dikis-istasyonu.glb",
+    "iron": "konfeksiyon/utu-masasi.glb",
+    "pack": "konfeksiyon/paketleme-masasi.glb",
+    "pallet": "konfeksiyon/palet-koli.glb",
+    "spread": "konfeksiyon/serim-makinesi.glb",
+    "hanger": "konfeksiyon/aski-tasima-sistemi.glb",
+    "form_finish": "konfeksiyon/form-finisher.glb",
+    "conveyor": "konfeksiyon/rulo-konveyor.glb",
+    "rope_open": "halat-acma.glb",
+    "centrifuge": "santrifuj.glb",
+    "dryer": "kurutma.glb",
+    "water_treatment": "su-aritma.glb",
+    "compressor": "kompresor.glb",
+    "tank": "dikey-tank.glb"
+  },
+  "stations": {
+    "GQC-01": "konfeksiyon/kalite-kontrol-masasi.glb"
+  },
+  "carriers": {
+    "forklift": "forklift.glb",
+    "fabric_cart": "kumas-araba.glb",
+    "trolley": "tasima-arabasi.glb"
+  },
+  "cargo": {
+    "raw_roll": "kumas-topu.glb",
+    "finished_roll": "kumas-topu.glb",
+    "garment_box": "koli.glb",
+    "pallet": "konfeksiyon/palet-koli.glb"
+  }
+}

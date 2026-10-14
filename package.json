@@ -1,0 +1,23 @@
+{
+  "name": "factory-simulation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "layout": "node scripts/genLayout.mjs",
+    "simtest": "esbuild src/simtest.ts --bundle --platform=node --outfile=scripts/simtest.cjs --log-level=error && node scripts/simtest.cjs",
+    "test": "esbuild src/campus.test.ts --bundle --platform=node --outfile=node_modules/.cache/campus-test.cjs --log-level=error && node node_modules/.cache/campus-test.cjs && esbuild src/logistics.test.ts --bundle --platform=node --define:import.meta.env.BASE_URL=\"'/'\" --outfile=node_modules/.cache/logistics-test.cjs --log-level=error && node node_modules/.cache/logistics-test.cjs"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0"
+  }
+}

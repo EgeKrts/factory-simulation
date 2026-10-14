@@ -1,0 +1,20 @@
+import { readFileSync } from 'node:fs';
+import { FactorySim } from './sim';
+import type { Layout } from './types';
+
+const layout = JSON.parse(readFileSync('public/layouts/default.layout.json', 'utf8')) as Layout;
+const sim = new FactorySim(layout);
+sim.faultsEnabled = false;
+const run = (sec: number) => { for (let i = 0; i < sec / 0.5; i++) sim.step(0.5); };
+run(3600 * 4);
+let k = sim.snapshot().kpi;
+console.log('4h normal', JSON.stringify(k));
+sim.toggleFault('BOILER-01');
+run(1800);
+const s = sim.snapshot();
+console.log('kazan arızalı 30dk; HT durumları:', s.machines.filter((m) => m.id.startsWith('HT-') || m.id === 'STENTER-01').map((m) => `${m.id}:${m.status}`).join(' '));
+sim.toggleFault('BOILER-01');
+run(3600 * 2);
+k = sim.snapshot().kpi;
+console.log('onarım sonrası 2h', JSON.stringify(k));
+console.log(sim.snapshot().machines.map((m) => `${m.id}:${m.status}:${m.counters.good}`).join('\n'));

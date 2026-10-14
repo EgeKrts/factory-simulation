@@ -1,0 +1,3260 @@
+{
+  "version": 2,
+  "floor": {
+    "center": [
+      0,
+      0
+    ],
+    "size": [
+      240,
+      180
+    ]
+  },
+  "areas": [
+    {
+      "id": "receiving",
+      "name": "MAL KABUL",
+      "buildingId": "receiving",
+      "center": [
+        -91,
+        -42
+      ],
+      "size": [
+        40,
+        28
+      ],
+      "color": "#89a9c0"
+    },
+    {
+      "id": "inbound",
+      "name": "HAM KUMAŞ DEPOSU",
+      "buildingId": "raw",
+      "center": [
+        -87,
+        35
+      ],
+      "size": [
+        32,
+        24
+      ],
+      "color": "#89a9c0"
+    },
+    {
+      "id": "dyehouse",
+      "name": "BOYAHANE",
+      "buildingId": "dye",
+      "center": [
+        -1,
+        -33
+      ],
+      "size": [
+        76,
+        50
+      ],
+      "color": "#55b8c4"
+    },
+    {
+      "id": "dyeprep",
+      "name": "BOYA HAZIRLAMA",
+      "buildingId": "dye",
+      "center": [
+        -43,
+        -49
+      ],
+      "size": [
+        23,
+        18
+      ],
+      "color": "#77b4ae"
+    },
+    {
+      "id": "finishing",
+      "name": "APRE",
+      "buildingId": "dye",
+      "center": [
+        64,
+        -33
+      ],
+      "size": [
+        56,
+        50
+      ],
+      "color": "#e4a56d"
+    },
+    {
+      "id": "quality",
+      "name": "FİNAL KALİTE",
+      "buildingId": "dye",
+      "center": [
+        64,
+        -55
+      ],
+      "size": [
+        55,
+        6
+      ],
+      "color": "#ad92c4"
+    },
+    {
+      "id": "garment",
+      "name": "KONFEKSİYON",
+      "buildingId": "garment",
+      "center": [
+        62,
+        42
+      ],
+      "size": [
+        56,
+        50
+      ],
+      "color": "#82b897"
+    },
+    {
+      "id": "warehouse",
+      "name": "MAMUL DEPO",
+      "buildingId": "warehouse",
+      "center": [
+        -27,
+        43
+      ],
+      "size": [
+        54,
+        46
+      ],
+      "color": "#e6bf72"
+    },
+    {
+      "id": "shipping",
+      "name": "SEVKİYAT AVLUSU",
+      "center": [
+        -65,
+        53
+      ],
+      "size": [
+        18,
+        26
+      ],
+      "color": "#6cbeb5"
+    },
+    {
+      "id": "utilities",
+      "name": "ENERJİ MERKEZİ",
+      "buildingId": "utility",
+      "center": [
+        -28,
+        -72
+      ],
+      "size": [
+        22,
+        16
+      ],
+      "color": "#c5ad93"
+    },
+    {
+      "id": "dye-service",
+      "name": "SU / BASINÇLI HAVA / TANKLAR",
+      "buildingId": "dye",
+      "center": [
+        7,
+        -55
+      ],
+      "size": [
+        63,
+        6
+      ],
+      "color": "#94adb6"
+    },
+    {
+      "id": "receiving_unload",
+      "name": "TIR BOŞALTMA AVLUSU",
+      "center": [
+        -103.5,
+        -14
+      ],
+      "size": [
+        12,
+        20
+      ],
+      "color": "#89a9c0"
+    },
+    {
+      "id": "power",
+      "name": "GÜNEŞ / BATARYA MERKEZİ",
+      "buildingId": "power",
+      "center": [
+        0,
+        -74
+      ],
+      "size": [
+        18,
+        14
+      ],
+      "color": "#5dbbc0"
+    },
+    {
+      "id": "grid",
+      "name": "TRAFO / ŞEBEKE",
+      "center": [
+        -13,
+        -74
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "color": "#dbbb66"
+    }
+  ],
+  "machines": [
+    {
+      "id": "ENTRY-01",
+      "type": "raw_entry",
+      "name": "TIR Boşaltma / Mal Kabul Girişi",
+      "area": "receiving_unload",
+      "position": [
+        -103.5,
+        0,
+        -14
+      ],
+      "rotationY": 3.141592653589793,
+      "params": {
+        "spawnSec": 30
+      },
+      "next": [
+        "RECEIPT-REG"
+      ]
+    },
+    {
+      "id": "RAWSTORE-01",
+      "type": "raw_store",
+      "name": "Stok Kontrol / Ham Kumaş Deposu",
+      "area": "inbound",
+      "position": [
+        -97,
+        0,
+        44
+      ],
+      "rotationY": 0,
+      "params": {
+        "rawReference": 1
+      },
+      "next": [
+        "INSP-01",
+        "INSP-03",
+        "INSP-04"
+      ]
+    },
+    {
+      "id": "INSP-01",
+      "type": "inspection",
+      "name": "02 · Giriş Kumaş Kontrol 1",
+      "area": "dyehouse",
+      "position": [
+        -46,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {
+        "rejectPct": 3
+      },
+      "next": [
+        "OPEN-01"
+      ]
+    },
+    {
+      "id": "CART-01",
+      "type": "cart",
+      "name": "Parti Arabası 1",
+      "area": "dyehouse",
+      "position": [
+        -23,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "HT-01",
+        "HT-02",
+        "HT-03",
+        "HT-04"
+      ]
+    },
+    {
+      "id": "HT-01",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 1.1",
+      "area": "dyehouse",
+      "position": [
+        -17,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 200,
+        "capacityKg": 250
+      },
+      "next": [
+        "CART-02"
+      ]
+    },
+    {
+      "id": "HT-02",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 1.2",
+      "area": "dyehouse",
+      "position": [
+        -2,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 240,
+        "capacityKg": 500
+      },
+      "next": [
+        "CART-02"
+      ]
+    },
+    {
+      "id": "HT-03",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 1.3",
+      "area": "dyehouse",
+      "position": [
+        13,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 280,
+        "capacityKg": 750
+      },
+      "next": [
+        "CART-02"
+      ]
+    },
+    {
+      "id": "HT-04",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 1.4",
+      "area": "dyehouse",
+      "position": [
+        28,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 320,
+        "capacityKg": 1000
+      },
+      "next": [
+        "CART-02"
+      ]
+    },
+    {
+      "id": "CART-02",
+      "type": "cart",
+      "name": "Islak Kumaş Arabası 1",
+      "area": "dyehouse",
+      "position": [
+        36,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CENT-01"
+      ]
+    },
+    {
+      "id": "STENTER-01",
+      "type": "stenter",
+      "name": "07 · Ramöz 1",
+      "area": "finishing",
+      "position": [
+        66,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "COMPACT-01"
+      ]
+    },
+    {
+      "id": "COMPACT-01",
+      "type": "compactor",
+      "name": "08 · Kompaktör / Fikse 1",
+      "area": "finishing",
+      "position": [
+        83,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "INSP-02"
+      ]
+    },
+    {
+      "id": "INSP-02",
+      "type": "inspection",
+      "name": "09 · Final Kalite 1",
+      "area": "quality",
+      "position": [
+        80,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {
+        "rejectPct": 2
+      },
+      "next": [
+        "SPREAD-01"
+      ]
+    },
+    {
+      "id": "CUT-01",
+      "type": "cut",
+      "name": "01 · Kesim",
+      "area": "garment",
+      "position": [
+        46,
+        0,
+        28
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "SEW-01",
+        "SEW-02",
+        "SEW-03"
+      ]
+    },
+    {
+      "id": "SEW-01",
+      "type": "sew",
+      "name": "02 · Dikim Bandı 1",
+      "area": "garment",
+      "position": [
+        65,
+        0,
+        31
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "HANGER-01"
+      ]
+    },
+    {
+      "id": "SEW-02",
+      "type": "sew",
+      "name": "03 · Dikim Bandı 2",
+      "area": "garment",
+      "position": [
+        65,
+        0,
+        40
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "HANGER-01"
+      ]
+    },
+    {
+      "id": "SEW-03",
+      "type": "sew",
+      "name": "04 · Dikim Bandı 3",
+      "area": "garment",
+      "position": [
+        65,
+        0,
+        49
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "HANGER-01"
+      ]
+    },
+    {
+      "id": "IRON-01",
+      "type": "iron",
+      "name": "07 · Ütü",
+      "area": "garment",
+      "position": [
+        57,
+        0,
+        59
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "FORM-01"
+      ]
+    },
+    {
+      "id": "GQC-01",
+      "type": "inspection",
+      "name": "06 · Konfeksiyon Son Kalite Kontrol",
+      "area": "garment",
+      "position": [
+        45,
+        0,
+        59
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 20,
+        "rejectPct": 2
+      },
+      "next": [
+        "IRON-01"
+      ]
+    },
+    {
+      "id": "PACK-01",
+      "type": "pack",
+      "name": "08 · Paketleme / Koli",
+      "area": "garment",
+      "position": [
+        81,
+        0,
+        64
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "SHIP-CONVEYOR"
+      ]
+    },
+    {
+      "id": "PALLET-01",
+      "type": "pallet",
+      "name": "Paletleme",
+      "area": "warehouse",
+      "position": [
+        -9,
+        0,
+        50
+      ],
+      "rotationY": 0,
+      "params": {
+        "shippingLine": 1
+      },
+      "next": [
+        "WH-01"
+      ]
+    },
+    {
+      "id": "WH-01",
+      "type": "warehouse",
+      "name": "Mamul Depo",
+      "area": "warehouse",
+      "position": [
+        -3,
+        0,
+        23
+      ],
+      "rotationY": 0,
+      "params": {
+        "mamulStore": 1
+      },
+      "next": [
+        "DOCK-01"
+      ]
+    },
+    {
+      "id": "DOCK-01",
+      "type": "dock",
+      "name": "Sevkiyat Rampası",
+      "area": "shipping",
+      "position": [
+        -50,
+        0,
+        53
+      ],
+      "rotationY": 3.141592653589793,
+      "params": {
+        "shippingDock": 1
+      },
+      "next": [
+        "TRUCK-01"
+      ]
+    },
+    {
+      "id": "TRUCK-01",
+      "type": "truck_out",
+      "name": "Nakliye Kamyonu",
+      "area": "shipping",
+      "position": [
+        -65,
+        0,
+        53
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "BOILER-01",
+      "type": "boiler",
+      "name": "Buhar Kazanı",
+      "area": "utilities",
+      "position": [
+        -28,
+        0,
+        -71.5
+      ],
+      "rotationY": -1.5707963267948966,
+      "params": {
+        "steamCapKgH": 32000,
+        "energyEquipment": 1,
+        "modelWidth": 7,
+        "modelHeight": 5.28,
+        "modelDepth": 3.28
+      },
+      "next": [],
+      "asset": "buhar-kazani.glb"
+    },
+    {
+      "id": "DYEPREP-01",
+      "type": "dyeprep",
+      "name": "03 · Boya / Kimyasal Hazırlama 1",
+      "area": "dyeprep",
+      "position": [
+        -43,
+        0,
+        -53
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "SLOT-WET-1",
+      "type": "slot",
+      "name": "Rezerv: HT-Ramöz arası 1",
+      "area": "dyehouse",
+      "position": [
+        -8,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "SLOT-WET-2",
+      "type": "slot",
+      "name": "Rezerv: HT-Ramöz arası 2",
+      "area": "dyehouse",
+      "position": [
+        -8,
+        0,
+        -19
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "SLOT-FIN-1",
+      "type": "slot",
+      "name": "Rezerv: Kompaktör sonrası",
+      "area": "finishing",
+      "position": [
+        53,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "SLOT-POSTQC",
+      "type": "slot",
+      "name": "Rezerv: Final kontrol sonrası",
+      "area": "quality",
+      "position": [
+        77,
+        0,
+        -51
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "SPREAD-01",
+      "type": "spread",
+      "name": "01 · Kumaş Serim",
+      "area": "garment",
+      "position": [
+        46,
+        0,
+        20
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CUT-01"
+      ]
+    },
+    {
+      "id": "HANGER-01",
+      "type": "hanger",
+      "name": "05 · Askı Taşıma Sistemi",
+      "area": "garment",
+      "position": [
+        83,
+        0,
+        39
+      ],
+      "rotationY": 1.5707963267948966,
+      "params": {},
+      "next": [
+        "GQC-01"
+      ]
+    },
+    {
+      "id": "FORM-01",
+      "type": "form_finish",
+      "name": "07 · Form Finisher",
+      "area": "garment",
+      "position": [
+        69,
+        0,
+        59
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CONVEYOR-01"
+      ]
+    },
+    {
+      "id": "CONVEYOR-01",
+      "type": "conveyor",
+      "name": "08 · Rulo Konveyör",
+      "area": "garment",
+      "position": [
+        81,
+        0,
+        59
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "PACK-01"
+      ]
+    },
+    {
+      "id": "OPEN-01",
+      "type": "rope_open",
+      "name": "02 · Halat Açma 1",
+      "area": "dyehouse",
+      "position": [
+        -32,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CART-01"
+      ]
+    },
+    {
+      "id": "CENT-01",
+      "type": "centrifuge",
+      "name": "05 · Sıkma / Santrifüj 1",
+      "area": "finishing",
+      "position": [
+        42,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "DRY-01"
+      ]
+    },
+    {
+      "id": "DRY-01",
+      "type": "dryer",
+      "name": "06 · Kurutma 1",
+      "area": "finishing",
+      "position": [
+        51,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "STENTER-01"
+      ]
+    },
+    {
+      "id": "INSP-03",
+      "type": "inspection",
+      "name": "02 · Giriş Kumaş Kontrol 2",
+      "area": "dyehouse",
+      "position": [
+        -46,
+        0,
+        -25
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "OPEN-02"
+      ]
+    },
+    {
+      "id": "OPEN-02",
+      "type": "rope_open",
+      "name": "02 · Halat Açma 2",
+      "area": "dyehouse",
+      "position": [
+        -32,
+        0,
+        -25
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CART-03"
+      ]
+    },
+    {
+      "id": "CART-03",
+      "type": "cart",
+      "name": "Parti Arabası 2",
+      "area": "dyehouse",
+      "position": [
+        -9,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {
+        "queueCap": 3
+      },
+      "next": [
+        "HT-05",
+        "HT-06",
+        "HT-07",
+        "HT-08"
+      ]
+    },
+    {
+      "id": "HT-05",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 2.1",
+      "area": "dyehouse",
+      "position": [
+        -17,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 240,
+        "capacityKg": 250
+      },
+      "next": [
+        "CART-05"
+      ]
+    },
+    {
+      "id": "HT-06",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 2.2",
+      "area": "dyehouse",
+      "position": [
+        -2,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 280,
+        "capacityKg": 500
+      },
+      "next": [
+        "CART-05"
+      ]
+    },
+    {
+      "id": "HT-07",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 2.3",
+      "area": "dyehouse",
+      "position": [
+        13,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 320,
+        "capacityKg": 750
+      },
+      "next": [
+        "CART-05"
+      ]
+    },
+    {
+      "id": "HT-08",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 2.4",
+      "area": "dyehouse",
+      "position": [
+        28,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 360,
+        "capacityKg": 1000
+      },
+      "next": [
+        "CART-05"
+      ]
+    },
+    {
+      "id": "CART-05",
+      "type": "cart",
+      "name": "Islak Kumaş Arabası 2",
+      "area": "dyehouse",
+      "position": [
+        52,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {
+        "queueCap": 4
+      },
+      "next": [
+        "CENT-02"
+      ]
+    },
+    {
+      "id": "CENT-02",
+      "type": "centrifuge",
+      "name": "05 · Sıkma / Santrifüj 2",
+      "area": "finishing",
+      "position": [
+        42,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "DRY-02"
+      ]
+    },
+    {
+      "id": "DRY-02",
+      "type": "dryer",
+      "name": "06 · Kurutma 2",
+      "area": "finishing",
+      "position": [
+        51,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "STENTER-02"
+      ]
+    },
+    {
+      "id": "STENTER-02",
+      "type": "stenter",
+      "name": "07 · Ramöz 2",
+      "area": "finishing",
+      "position": [
+        66,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "COMPACT-02"
+      ]
+    },
+    {
+      "id": "COMPACT-02",
+      "type": "compactor",
+      "name": "08 · Kompaktör / Fikse 2",
+      "area": "finishing",
+      "position": [
+        83,
+        0,
+        -35
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "INSP-05"
+      ]
+    },
+    {
+      "id": "INSP-05",
+      "type": "inspection",
+      "name": "09 · Final Kalite 2",
+      "area": "quality",
+      "position": [
+        63,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {
+        "rejectPct": 2
+      },
+      "next": [
+        "SPREAD-01"
+      ]
+    },
+    {
+      "id": "INSP-04",
+      "type": "inspection",
+      "name": "02 · Giriş Kumaş Kontrol 3",
+      "area": "dyehouse",
+      "position": [
+        -46,
+        0,
+        -15
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "OPEN-03"
+      ]
+    },
+    {
+      "id": "OPEN-03",
+      "type": "rope_open",
+      "name": "02 · Halat Açma 3",
+      "area": "dyehouse",
+      "position": [
+        -32,
+        0,
+        -15
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "CART-04"
+      ]
+    },
+    {
+      "id": "CART-04",
+      "type": "cart",
+      "name": "Parti Arabası 3",
+      "area": "dyehouse",
+      "position": [
+        5,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {
+        "queueCap": 3
+      },
+      "next": [
+        "HT-09",
+        "HT-10",
+        "HT-11",
+        "HT-12"
+      ]
+    },
+    {
+      "id": "HT-09",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 3.1",
+      "area": "dyehouse",
+      "position": [
+        -17,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 240,
+        "capacityKg": 250
+      },
+      "next": [
+        "CART-06"
+      ]
+    },
+    {
+      "id": "HT-10",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 3.2",
+      "area": "dyehouse",
+      "position": [
+        -2,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 280,
+        "capacityKg": 500
+      },
+      "next": [
+        "CART-06"
+      ]
+    },
+    {
+      "id": "HT-11",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 3.3",
+      "area": "dyehouse",
+      "position": [
+        13,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 320,
+        "capacityKg": 750
+      },
+      "next": [
+        "CART-06"
+      ]
+    },
+    {
+      "id": "HT-12",
+      "type": "ht_jet",
+      "name": "04 · HT Jet 3.4",
+      "area": "dyehouse",
+      "position": [
+        28,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {
+        "cycleSec": 360,
+        "capacityKg": 1000
+      },
+      "next": [
+        "CART-06"
+      ]
+    },
+    {
+      "id": "CART-06",
+      "type": "cart",
+      "name": "Islak Kumaş Arabası 3",
+      "area": "dyehouse",
+      "position": [
+        68,
+        0,
+        -12
+      ],
+      "rotationY": 0,
+      "params": {
+        "queueCap": 4
+      },
+      "next": [
+        "CENT-03"
+      ]
+    },
+    {
+      "id": "CENT-03",
+      "type": "centrifuge",
+      "name": "05 · Sıkma / Santrifüj 3",
+      "area": "finishing",
+      "position": [
+        42,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "DRY-03"
+      ]
+    },
+    {
+      "id": "DRY-03",
+      "type": "dryer",
+      "name": "06 · Kurutma 3",
+      "area": "finishing",
+      "position": [
+        51,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "STENTER-03"
+      ]
+    },
+    {
+      "id": "STENTER-03",
+      "type": "stenter",
+      "name": "07 · Ramöz 3",
+      "area": "finishing",
+      "position": [
+        66,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "COMPACT-03"
+      ]
+    },
+    {
+      "id": "COMPACT-03",
+      "type": "compactor",
+      "name": "08 · Kompaktör / Fikse 3",
+      "area": "finishing",
+      "position": [
+        83,
+        0,
+        -23
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": [
+        "INSP-06"
+      ]
+    },
+    {
+      "id": "INSP-06",
+      "type": "inspection",
+      "name": "09 · Final Kalite 3",
+      "area": "quality",
+      "position": [
+        46,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {
+        "rejectPct": 2
+      },
+      "next": [
+        "SPREAD-01"
+      ]
+    },
+    {
+      "id": "DYEPREP-02",
+      "type": "dyeprep",
+      "name": "03 · Boya / Kimyasal Hazırlama 2",
+      "area": "dyeprep",
+      "position": [
+        -43,
+        0,
+        -45
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "TANK-01",
+      "type": "tank",
+      "name": "Proses Su Tankı 1",
+      "area": "dye-service",
+      "position": [
+        -25,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "TANK-02",
+      "type": "tank",
+      "name": "Proses Su Tankı 2",
+      "area": "dye-service",
+      "position": [
+        -19,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "TANK-03",
+      "type": "tank",
+      "name": "Proses Su Tankı 3",
+      "area": "dye-service",
+      "position": [
+        -13,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "WATER-01",
+      "type": "water_treatment",
+      "name": "Su Arıtma 1",
+      "area": "dye-service",
+      "position": [
+        1,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "AIR-01",
+      "type": "compressor",
+      "name": "Kompresör 1",
+      "area": "dye-service",
+      "position": [
+        23,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "WATER-02",
+      "type": "water_treatment",
+      "name": "Su Arıtma 2",
+      "area": "dye-service",
+      "position": [
+        11,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "AIR-02",
+      "type": "compressor",
+      "name": "Kompresör 2",
+      "area": "dye-service",
+      "position": [
+        34,
+        0,
+        -55
+      ],
+      "rotationY": 0,
+      "params": {},
+      "next": []
+    },
+    {
+      "id": "RECEIPT-REG",
+      "type": "receipt_desk",
+      "name": "01 · Kayıt / Barkod Kabulü",
+      "area": "receiving",
+      "position": [
+        -109.9,
+        0,
+        -48
+      ],
+      "rotationY": 1.5707963267948966,
+      "params": {
+        "referenceLayout": 1
+      },
+      "next": [
+        "RECEIPT-SCAN"
+      ]
+    },
+    {
+      "id": "RECEIPT-SCAN",
+      "type": "receipt_scan",
+      "name": "02 · Kumaş Topu Girişi / Tarama",
+      "area": "receiving",
+      "position": [
+        -99,
+        0,
+        -45
+      ],
+      "rotationY": 1.5707963267948966,
+      "params": {
+        "referenceLayout": 1
+      },
+      "next": [
+        "RECEIPT-WEIGH"
+      ]
+    },
+    {
+      "id": "RECEIPT-WEIGH",
+      "type": "receipt_scale",
+      "name": "03 · Kontrol / Tartım",
+      "area": "receiving",
+      "position": [
+        -86,
+        0,
+        -47
+      ],
+      "rotationY": 0,
+      "params": {
+        "referenceLayout": 1
+      },
+      "next": [
+        "RECEIPT-HOLD"
+      ]
+    },
+    {
+      "id": "RECEIPT-HOLD",
+      "type": "receipt_hold",
+      "name": "04 · Geçici Bekleme / Depoya Onay",
+      "area": "receiving",
+      "position": [
+        -76,
+        0,
+        -46
+      ],
+      "rotationY": 0,
+      "params": {
+        "referenceLayout": 1
+      },
+      "next": [
+        "RAWSTORE-01"
+      ]
+    },
+    {
+      "id": "SHIP-CONVEYOR",
+      "type": "conveyor",
+      "name": "Paketleme Hattı",
+      "area": "warehouse",
+      "position": [
+        -9,
+        0,
+        30
+      ],
+      "rotationY": -1.5707963267948966,
+      "params": {},
+      "next": [
+        "SHIP-LABEL"
+      ]
+    },
+    {
+      "id": "SHIP-LABEL",
+      "type": "pack",
+      "name": "Etiketleme / Barkod",
+      "area": "warehouse",
+      "position": [
+        -9,
+        0,
+        41
+      ],
+      "rotationY": -1.5707963267948966,
+      "params": {},
+      "next": [
+        "PALLET-01"
+      ]
+    },
+    {
+      "id": "ENERGY-WATER",
+      "type": "water_treatment",
+      "name": "Su Yumuşatma Sistemi",
+      "area": "utilities",
+      "position": [
+        -20,
+        0,
+        -71.8
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 2.88,
+        "modelHeight": 2.29,
+        "modelDepth": 1.35,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Water softener.glb"
+    },
+    {
+      "id": "ENERGY-FEED",
+      "type": "tank",
+      "name": "Besleme Suyu Tankı",
+      "area": "utilities",
+      "position": [
+        -23.3,
+        0,
+        -68.6
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 3.97,
+        "modelHeight": 3.97,
+        "modelDepth": 2.7,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Feedwater tank.glb"
+    },
+    {
+      "id": "ENERGY-DOSING",
+      "type": "tank",
+      "name": "Kimyasal Dozaj Ünitesi",
+      "area": "utilities",
+      "position": [
+        -20,
+        0,
+        -75.8
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 2.75,
+        "modelHeight": 1.42,
+        "modelDepth": 1.65,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Chemical dosing.glb"
+    },
+    {
+      "id": "ENERGY-FUEL",
+      "type": "tank",
+      "name": "Yakıt Hattı",
+      "area": "utilities",
+      "position": [
+        -25,
+        0,
+        -78
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 5.48,
+        "modelHeight": 1.86,
+        "modelDepth": 1.71,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Fuel line.glb"
+    },
+    {
+      "id": "ENERGY-AIR",
+      "type": "compressor",
+      "name": "Kompresör",
+      "area": "utilities",
+      "position": [
+        -35,
+        0,
+        -77.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 4.08,
+        "modelHeight": 1.95,
+        "modelDepth": 1.4,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Air compressor.glb"
+    },
+    {
+      "id": "ENERGY-STEAM",
+      "type": "tank",
+      "name": "Buhar Manifoldu",
+      "area": "utilities",
+      "position": [
+        -34,
+        3.6,
+        -65.7
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 5.38,
+        "modelHeight": 2.33,
+        "modelDepth": 1.91,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Steam manifold.glb"
+    },
+    {
+      "id": "ENERGY-RETURN",
+      "type": "tank",
+      "name": "Kondens Dönüş Hattı",
+      "area": "utilities",
+      "position": [
+        -34,
+        0,
+        -68.5
+      ],
+      "rotationY": 0,
+      "params": {
+        "energyEquipment": 1,
+        "modelWidth": 4.57,
+        "modelHeight": 3.5,
+        "modelDepth": 1.09,
+        "queueCap": 0,
+        "mtbfH": 48,
+        "mttrMin": 15
+      },
+      "next": [],
+      "asset": "enerji-odasi/Condensate return.glb"
+    },
+    {
+      "id": "INV-01",
+      "type": "inverter",
+      "name": "İnverter 1",
+      "area": "power",
+      "position": [
+        -5,
+        0,
+        -77
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "ratedKw": 935.5500000000001
+      },
+      "next": []
+    },
+    {
+      "id": "INV-02",
+      "type": "inverter",
+      "name": "İnverter 2",
+      "area": "power",
+      "position": [
+        -5,
+        0,
+        -71
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "ratedKw": 935.5500000000001
+      },
+      "next": []
+    },
+    {
+      "id": "BAT-01",
+      "type": "battery",
+      "name": "Batarya Kabini 1",
+      "area": "power",
+      "position": [
+        3,
+        0,
+        -77
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "capacityKwh": 250,
+        "powerKw": 100
+      },
+      "next": []
+    },
+    {
+      "id": "BAT-02",
+      "type": "battery",
+      "name": "Batarya Kabini 2",
+      "area": "power",
+      "position": [
+        6,
+        0,
+        -77
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "capacityKwh": 250,
+        "powerKw": 100
+      },
+      "next": []
+    },
+    {
+      "id": "BAT-03",
+      "type": "battery",
+      "name": "Batarya Kabini 3",
+      "area": "power",
+      "position": [
+        3,
+        0,
+        -71
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "capacityKwh": 250,
+        "powerKw": 100
+      },
+      "next": []
+    },
+    {
+      "id": "BAT-04",
+      "type": "battery",
+      "name": "Batarya Kabini 4",
+      "area": "power",
+      "position": [
+        6,
+        0,
+        -71
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "capacityKwh": 250,
+        "powerKw": 100
+      },
+      "next": []
+    },
+    {
+      "id": "POWER-MAIN",
+      "type": "switchgear",
+      "name": "Fabrika Dağıtım Panosu",
+      "area": "power",
+      "position": [
+        0,
+        0,
+        -69
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "ratedKw": 2000
+      },
+      "next": []
+    },
+    {
+      "id": "GRID-01",
+      "type": "transformer",
+      "name": "Trafo / Çift Yönlü Sayaç",
+      "area": "grid",
+      "position": [
+        -13,
+        0,
+        -74
+      ],
+      "rotationY": 0,
+      "params": {
+        "mtbfH": 120,
+        "mttrMin": 20,
+        "queueCap": 0,
+        "ratedKw": 1200,
+        "exportEnabled": 1,
+        "sellTlKwh": 2.5,
+        "buyTlKwh": 4
+      },
+      "next": []
+    }
+  ],
+  "buildings": [
+    {
+      "id": "receiving",
+      "name": "01 · MAL KABUL",
+      "center": [
+        -91,
+        -42
+      ],
+      "size": [
+        40,
+        28
+      ],
+      "height": 6,
+      "color": "#577082",
+      "doors": [
+        {
+          "id": "receiving-load",
+          "side": "south",
+          "offset": -12.5,
+          "width": 8,
+          "height": 5
+        }
+      ]
+    },
+    {
+      "id": "raw",
+      "name": "02 · HAM KUMAŞ DEPOSU",
+      "center": [
+        -87,
+        35
+      ],
+      "size": [
+        32,
+        24
+      ],
+      "height": 7.5,
+      "color": "#637888",
+      "doors": [
+        {
+          "id": "raw-load",
+          "side": "north",
+          "offset": 8.5,
+          "width": 6,
+          "height": 5
+        }
+      ]
+    },
+    {
+      "id": "dye",
+      "name": "03 · BOYAHANE / APRE / KALİTE",
+      "center": [
+        18.5,
+        -34
+      ],
+      "size": [
+        147,
+        50
+      ],
+      "height": 10,
+      "color": "#3d7b8a",
+      "doors": [
+        {
+          "id": "dye-load",
+          "side": "south",
+          "offset": -46.5,
+          "width": 8,
+          "height": 5
+        },
+        {
+          "id": "finish-load",
+          "side": "south",
+          "offset": 44.5,
+          "width": 8,
+          "height": 5
+        }
+      ],
+      "rooms": [
+        {
+          "name": "BOYA / KİMYASAL HAZIRLAMA",
+          "center": [
+            -43,
+            -49
+          ],
+          "size": [
+            23,
+            18
+          ],
+          "doorZ": -49
+        }
+      ]
+    },
+    {
+      "id": "garment",
+      "name": "04 · KONFEKSİYON",
+      "center": [
+        62,
+        42
+      ],
+      "size": [
+        56,
+        50
+      ],
+      "height": 8,
+      "color": "#698574",
+      "doors": [
+        {
+          "id": "garment-load",
+          "side": "north",
+          "offset": 0,
+          "width": 8,
+          "height": 5
+        }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "name": "05 · MAMUL / SEVKİYAT",
+      "center": [
+        -27,
+        43
+      ],
+      "size": [
+        54,
+        46
+      ],
+      "height": 9.5,
+      "color": "#ad8b53",
+      "doors": [
+        {
+          "id": "warehouse-in",
+          "side": "north",
+          "offset": 18,
+          "width": 7,
+          "height": 6
+        },
+        {
+          "id": "warehouse-load",
+          "side": "west",
+          "offset": 10,
+          "width": 7,
+          "height": 7
+        },
+        {
+          "id": "warehouse-load-back",
+          "side": "west",
+          "offset": -7,
+          "width": 7,
+          "height": 7
+        }
+      ]
+    },
+    {
+      "id": "utility",
+      "name": "06 · ENERJİ MERKEZİ",
+      "center": [
+        -28,
+        -72
+      ],
+      "size": [
+        22,
+        16
+      ],
+      "height": 6.5,
+      "color": "#7b8b93",
+      "doors": [
+        {
+          "id": "utility-load",
+          "side": "west",
+          "offset": 0,
+          "width": 8,
+          "height": 5
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "name": "07 · GÜNEŞ / BATARYA MERKEZİ",
+      "center": [
+        0,
+        -74
+      ],
+      "size": [
+        18,
+        14
+      ],
+      "height": 5.5,
+      "color": "#45788a",
+      "doors": [
+        {
+          "id": "power-door",
+          "side": "north",
+          "offset": 0,
+          "width": 4,
+          "height": 3
+        }
+      ]
+    }
+  ],
+  "roads": [
+    {
+      "id": "spine",
+      "points": [
+        [
+          -117,
+          3
+        ],
+        [
+          108,
+          3
+        ]
+      ],
+      "width": 12
+    },
+    {
+      "id": "west-service",
+      "points": [
+        [
+          -62,
+          -87
+        ],
+        [
+          -62,
+          89
+        ]
+      ],
+      "width": 10
+    },
+    {
+      "id": "east-service-north",
+      "points": [
+        [
+          20,
+          -87
+        ],
+        [
+          20,
+          -66
+        ]
+      ],
+      "width": 10
+    },
+    {
+      "id": "east-service",
+      "points": [
+        [
+          20,
+          3
+        ],
+        [
+          20,
+          79
+        ]
+      ],
+      "width": 10
+    },
+    {
+      "id": "ring",
+      "points": [
+        [
+          -117,
+          79
+        ],
+        [
+          -117,
+          -87
+        ],
+        [
+          108,
+          -87
+        ],
+        [
+          108,
+          79
+        ],
+        [
+          -117,
+          79
+        ]
+      ],
+      "width": 6
+    },
+    {
+      "id": "entry",
+      "points": [
+        [
+          -62,
+          79
+        ],
+        [
+          -62,
+          103
+        ]
+      ],
+      "width": 10
+    },
+    {
+      "id": "public",
+      "points": [
+        [
+          -180,
+          103
+        ],
+        [
+          180,
+          103
+        ]
+      ],
+      "width": 12,
+      "public": true
+    }
+  ],
+  "outdoors": [
+    {
+      "id": "receive-yard",
+      "name": "Mal kabul avlusu",
+      "center": [
+        -91,
+        -15
+      ],
+      "size": [
+        40,
+        26
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "raw-yard",
+      "name": "Ham depo yaklaşımı",
+      "center": [
+        -82,
+        14
+      ],
+      "size": [
+        24,
+        20
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "dye-yard",
+      "name": "Boyahane yaklaşımı",
+      "center": [
+        -28,
+        -4
+      ],
+      "size": [
+        20,
+        14
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "finish-yard",
+      "name": "Apre yaklaşımı",
+      "center": [
+        63,
+        -3
+      ],
+      "size": [
+        20,
+        16
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "garment-yard",
+      "name": "Konfeksiyon yaklaşımı",
+      "center": [
+        62,
+        12
+      ],
+      "size": [
+        20,
+        12
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "warehouse-yard",
+      "name": "Depo yaklaşımı",
+      "center": [
+        -9,
+        14
+      ],
+      "size": [
+        20,
+        14
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "shipping-yard",
+      "name": "Sevkiyat avlusu",
+      "center": [
+        -62,
+        46
+      ],
+      "size": [
+        24,
+        38
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "utility-yard",
+      "name": "Enerji servis alanı",
+      "center": [
+        -49,
+        -72
+      ],
+      "size": [
+        28,
+        12
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "parking",
+      "name": "Personel / ziyaretçi",
+      "center": [
+        74,
+        79
+      ],
+      "size": [
+        40,
+        12
+      ],
+      "kind": "parking"
+    },
+    {
+      "id": "grid-yard",
+      "name": "Trafo servis avlusu",
+      "center": [
+        -13,
+        -74
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "kind": "yard"
+    }
+  ],
+  "utilityRoutes": [
+    {
+      "from": "BOILER-01",
+      "to": "FORM-01",
+      "kind": "steam",
+      "height": 6.5,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -2,
+          -72
+        ],
+        [
+          -2,
+          -61
+        ],
+        [
+          20,
+          -61
+        ],
+        [
+          20,
+          3
+        ],
+        [
+          69,
+          3
+        ],
+        [
+          69,
+          59
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-01",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -17,
+          -41
+        ],
+        [
+          -17,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-01",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -17,
+          -29
+        ],
+        [
+          -17,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-02",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -2,
+          -41
+        ],
+        [
+          -2,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-02",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -2,
+          -29
+        ],
+        [
+          -2,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-03",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          13,
+          -41
+        ],
+        [
+          13,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-03",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          13,
+          -29
+        ],
+        [
+          13,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-04",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          28,
+          -41
+        ],
+        [
+          28,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-04",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          28,
+          -29
+        ],
+        [
+          28,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "STENTER-01",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          66,
+          -41
+        ],
+        [
+          66,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "DRY-01",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          51,
+          -41
+        ],
+        [
+          51,
+          -47
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-05",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -17,
+          -41
+        ],
+        [
+          -17,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-05",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -17,
+          -29
+        ],
+        [
+          -17,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-06",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -2,
+          -41
+        ],
+        [
+          -2,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-06",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -2,
+          -29
+        ],
+        [
+          -2,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-07",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          13,
+          -41
+        ],
+        [
+          13,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-07",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          13,
+          -29
+        ],
+        [
+          13,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-08",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          28,
+          -41
+        ],
+        [
+          28,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-08",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          28,
+          -29
+        ],
+        [
+          28,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "DRY-02",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          51,
+          -41
+        ],
+        [
+          51,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "STENTER-02",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          66,
+          -41
+        ],
+        [
+          66,
+          -35
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-09",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -17,
+          -41
+        ],
+        [
+          -17,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-09",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -17,
+          -29
+        ],
+        [
+          -17,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-10",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          -2,
+          -41
+        ],
+        [
+          -2,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-10",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          -2,
+          -29
+        ],
+        [
+          -2,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-11",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          13,
+          -41
+        ],
+        [
+          13,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-11",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          13,
+          -29
+        ],
+        [
+          13,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "HT-12",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          28,
+          -41
+        ],
+        [
+          28,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "DYEPREP-02",
+      "to": "HT-12",
+      "kind": "dye",
+      "height": 7.6,
+      "points": [
+        [
+          -43,
+          -45
+        ],
+        [
+          -30,
+          -45
+        ],
+        [
+          -30,
+          -29
+        ],
+        [
+          28,
+          -29
+        ],
+        [
+          28,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "DRY-03",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          51,
+          -41
+        ],
+        [
+          51,
+          -23
+        ]
+      ]
+    },
+    {
+      "from": "BOILER-01",
+      "to": "STENTER-03",
+      "kind": "steam",
+      "height": 8,
+      "points": [
+        [
+          -28,
+          -71.5
+        ],
+        [
+          -28,
+          -61
+        ],
+        [
+          -28,
+          -41
+        ],
+        [
+          66,
+          -41
+        ],
+        [
+          66,
+          -23
+        ]
+      ]
+    }
+  ],
+  "garmentRevision": 1,
+  "dyeRevision": 1,
+  "receivingRevision": 3,
+  "obstacles": [
+    {
+      "id": "receiving-column--14",
+      "center": [
+        -105.5,
+        -56
+      ],
+      "size": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "receiving-column--8",
+      "center": [
+        -105.5,
+        -50
+      ],
+      "size": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "receiving-column--2",
+      "center": [
+        -105.5,
+        -44
+      ],
+      "size": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "receiving-column-4",
+      "center": [
+        -105.5,
+        -38
+      ],
+      "size": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "receiving-safety-rail",
+      "center": [
+        -94,
+        -49
+      ],
+      "size": [
+        3,
+        0.12
+      ]
+    },
+    {
+      "id": "raw-rack--7",
+      "center": [
+        -101.3,
+        28
+      ],
+      "size": [
+        1.2,
+        6.95
+      ]
+    },
+    {
+      "id": "raw-rack-0",
+      "center": [
+        -101.3,
+        35
+      ],
+      "size": [
+        1.2,
+        6.95
+      ]
+    },
+    {
+      "id": "raw-rack-7",
+      "center": [
+        -101.3,
+        42
+      ],
+      "size": [
+        1.2,
+        6.95
+      ]
+    },
+    {
+      "id": "shipping-rack--12",
+      "center": [
+        -39,
+        40
+      ],
+      "size": [
+        1.5,
+        27
+      ]
+    },
+    {
+      "id": "shipping-rack--3",
+      "center": [
+        -30,
+        40
+      ],
+      "size": [
+        1.5,
+        27
+      ]
+    },
+    {
+      "id": "shipping-rack-6",
+      "center": [
+        -21,
+        40
+      ],
+      "size": [
+        1.5,
+        27
+      ]
+    }
+  ],
+  "rawRevision": 1,
+  "shippingRevision": 2,
+  "energyRevision": 3,
+  "solarRevision": 1
+}

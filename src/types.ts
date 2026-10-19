@@ -55,6 +55,7 @@ export interface Layout {
   shippingRevision?: number;
   energyRevision?: number;
   solarRevision?: number;
+  adminRevision?: number;
   floor: { size: [number, number]; center: [number, number] };
   areas: AreaDef[];
   machines: MachineDef[];

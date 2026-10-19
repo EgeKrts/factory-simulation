@@ -8,12 +8,15 @@ A browser-based textile factory simulation with interactive 3D buildings, animat
   <img src="docs/screenshots/campus.png" alt="DOKUMA yerleşkesi: güneş panelli fabrika binaları ve servis yolları" width="800" />
 </p>
 
-240 × 180 m yerleşke · 7 bina · 91 ekipman · 74 üretim bağlantısı · 3.402 güneş paneli
+240 × 209 m yerleşke · 7 üretim ve enerji binası + yönetim binası ve mağaza · 91 ekipman · 74 üretim bağlantısı · 3.402 güneş paneli
 
 ## Özellikler
 
 - **Uçtan uca üretim:** mal kabul → ham kumaş deposu → boyahane / apre / kalite → konfeksiyon → mamul depo / sevkiyat.
 - **İnteraktif 3D sahne:** bina inceleme, açılan çatılar, makine seçimi, gündüz/gece görünümü ve düzenlenebilir yerleşim.
+- **Yönetim binası:** üç katta 13 birim; kat kesiti ve birim odağıyla SCADA izleme odası, lobi, kafeterya, bilgi işlem, yönetim, tasarım, planlama ve laboratuvar alanlarını inceleme.
+- **Mağaza ve sosyal alanlar:** Eco-Tex fabrika satış showroom'u, açık kafeterya ve güneş panelli EV şarj otoparkı.
+- **Güncellenen arayüz:** gruplandırılmış araç çubuğu, bina seçimleri, birim kartları ve kat geçişleri.
 - **Hareketli lojistik:** fiziksel yük taşıyan forkliftler, kumaş arabaları, kapı ve koridorları kullanan üretim güzergâhları.
 - **Konfeksiyon animasyonları:** üç dikim bandında toplam 72 operatör, kesim, askı taşıma, ütü ve koli paketleme.
 - **Üretim takibi:** parti numaraları, kuyruklar, WIP, sevkiyat, arızalar, onarım ve yardımcı tesis beklemeleri.
@@ -68,6 +71,8 @@ Derlenen uygulama ve modeller `dist/` klasörüne yazılır.
 3. Makine listesinden bir istasyon seçerek parti, operatör, arıza ve kaynak tüketimini inceleyin.
 4. Hız düğmeleriyle simülasyonu çalıştırın; **Gündüz / Gece** ile sahne ışığını değiştirin.
 5. **Düzenle** ile makineleri taşıyın/döndürün ve yerleşimi JSON olarak aktarın. **Görsel ↓** sahneyi PNG olarak kaydeder.
+6. Yönetim binasına tıklayın; **Kat kesiti** düğmeleriyle katı, birim kartlarıyla odayı seçin. **Tüm bina** dış görünümü açar; **Çıkış** bina incelemesini kapatır.
+7. **Bina seç** listesinden **Eco-Tex Mağaza & Showroom** veya **Açık Kafeterya & EV Otopark** alanına geçin.
 
 Yerel adrese `?inspect=receiving`, `?inspect=raw`, `?inspect=dye`, `?inspect=garment`, `?inspect=warehouse`, `?inspect=utility` veya `?inspect=power` eklemek ilgili binayı gündüz ve duraklatılmış olarak açar.
 
@@ -80,14 +85,17 @@ npm run simtest
 npm run build
 ```
 
-14 Ekim 2026 kontrolünde üretim derlemesi, kampüs/lojistik testleri ve simülasyon senaryosu geçti. Testler 74 üretim güzergâhını, kayıt geçişlerini, yük taşıma animasyonlarını, arıza/onarımı, iş tüketimlerini ve güneş/batarya enerji bilançosunu kapsar. Vite, Three.js içeren ana paket için 500 kB boyut uyarısı verir; derleme tamamlanır.
+19 Ekim 2026 kontrolünde üretim derlemesi, kampüs/lojistik testleri ve simülasyon senaryosu geçti. Testler 74 üretim güzergâhını, kayıt geçişlerini, yük taşıma animasyonlarını, arıza/onarımı, iş tüketimlerini ve güneş/batarya enerji bilançosunu kapsar. Vite, Three.js içeren ana paket için 500 kB boyut uyarısı verir; derleme tamamlanır.
 
 ## Proje yapısı
 
 | Konum | İçerik |
 | --- | --- |
 | `src/` | Üretim motoru, 3D sahne, bölüm görünümleri, navigasyon ve testler |
+| `src/adminBuilding.ts`, `src/adminLayout.ts` | Yönetim binası, kat kesitleri, birimler ve yerleşim geçişi |
+| `src/ecoStore.ts`, `src/outdoorComplex.ts` | Mağaza, açık kafeterya ve EV şarj otoparkı |
 | `public/assets/` | GLB modelleri, model eşlemeleri ve mal kabul kaynakları |
+| `public/assets/yonetim-bina/yonetim-bina.glb` | Yönetim binası modeli |
 | `public/layouts/default.layout.json` | Varsayılan fabrika yerleşimi |
 | `scripts/` | Yerleşim üretimi ve model aktarım araçları |
 | `docs/screenshots/` | README'de gösterilen sahne görüntüleri |

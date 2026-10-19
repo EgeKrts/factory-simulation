@@ -11,6 +11,7 @@ import { upgradeRawWarehouse } from './rawLayout';
 import { upgradeShippingWarehouse } from './shippingLayout';
 import { upgradeEnergyCentre } from './energyLayout';
 import { upgradeSolar } from './solar';
+import { upgradeAdmin } from './adminLayout';
 import { resourceDefaults } from './resources';
 
 const LS_KEY = 'factory-layout-v2';
@@ -24,7 +25,7 @@ async function loadLayout(): Promise<Layout> {
   const saved = localStorage.getItem(LS_KEY);
   if (saved) {
     try {
-      const parsed = parseLayout(JSON.parse(saved), defaults), combined = upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings(parsed))))))));
+      const parsed = parseLayout(JSON.parse(saved), defaults), combined = upgradeAdmin(upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings(parsed)))))))));
       if (combined !== parsed) {
         localStorage.setItem(`${LS_KEY}-before-processing-merge-${Date.now()}`, saved);
         localStorage.setItem(LS_KEY, JSON.stringify(combined));
@@ -58,13 +59,39 @@ async function main() {
   let layoutValid = true;
   const history = new Map<string, number[]>();
 
+  // ---------- İdari bina paneli: birim kartları + kat kesiti ----------
+  const adminPanel = document.createElement('section');
+  adminPanel.id = 'adminPanel'; adminPanel.hidden = true; $('stage').appendChild(adminPanel);
+  const FLOOR_NAMES = ['Zemin Kat', '1. Kat', '2. Kat'];
+  function renderAdmin(open: boolean, floor: number, unitId: string | null) {
+    adminPanel.hidden = !open;
+    if (!open) return;
+    const units = view.adminUnits, floors = Math.max(1, view.adminFloors);
+    const chip = (f: number, label: string) => `<button class="chip ${f === floor ? 'on' : ''}" data-floor="${f}">${label}</button>`;
+    const groups = Array.from({ length: floors }, (_, f) => `<h4>${FLOOR_NAMES[f] ?? f + '. Kat'}</h4>` + units.filter((u) => u.floor === f).map((u) =>
+      `<button class="unit ${u.id === unitId ? 'on' : ''}" data-unit="${esc(u.id)}"><span class="ico">${u.icon}</span><span class="txt"><b>${esc(u.name)}</b><small>${esc(u.desc)}</small></span><em class="${u.status}">${u.status === 'ready' ? 'Hazır' : 'Planlanıyor'}</em></button>`).join('')).join('');
+    adminPanel.innerHTML = `<header><div><small>İDARİ BİNA</small><b>Birimler</b></div><div class="hdr-acts"><button class="x" data-act="hide" title="Menüyü kapat" aria-label="Menüyü kapat">✕</button></div></header>
+      <div class="chips"><span>Kat kesiti</span>${Array.from({ length: floors }, (_, f) => chip(f, FLOOR_NAMES[f] ?? f + '. Kat')).join('')}${chip(-1, 'Tüm bina')}<button class="chip exit" data-act="exit" title="İdari bina görünümünden çık">Çıkış</button></div>
+      <div class="cards">${groups}</div>`;
+  }
+  adminPanel.onclick = (e) => {
+    const el = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!el) return;
+    if (el.dataset.act === 'hide') {
+      if (view.adminFloor < 0) view.closeAdmin();
+      else adminPanel.hidden = true;
+    } else if (el.dataset.act === 'exit') view.closeAdmin();
+    else if (el.dataset.floor !== undefined) view.setAdminFloor(Number(el.dataset.floor));
+    else if (el.dataset.unit) view.focusAdminUnit(el.dataset.unit);
+  };
+
   const view = new FactoryView($('c') as HTMLCanvasElement, {
+    onAdminChange: renderAdmin,
     onSelect: () => { renderInspector(); markTree(); },
     onBuildingSelect: (id) => {
       ($('buildingSelect') as HTMLSelectElement).value = id ?? '';
-      $('sceneTitle').textContent = id ? view.layout.buildings?.find((b) => b.id === id)?.name ?? 'Bina inceleme' : 'TEKSTİL YERLEŞKESİ';
+      $('sceneTitle').textContent = id === 'eco_store' ? 'DOKUMA ECO-TEX MAĞAZASI' : id === 'outdoor_complex' ? 'AÇIK KAFETERYA & EV ŞARJ OTOPARKI' : id ? view.layout.buildings?.find((b) => b.id === id)?.name ?? 'Bina inceleme' : 'TEKSTİL YERLEŞKESİ';
       $('sceneEyebrow').textContent = 'ENDÜSTRİYEL YERLEŞKE' + (id ? ' / ' + ($('sceneTitle').textContent??'').slice(0,2) : '');
-      $('sceneSubtitle').textContent = id ? 'Çatı açık · İç üretim alanı' : `${view.layout.floor.size.join(' × ')} m · ${view.layout.buildings?.length ?? 0} bina`;
+      $('sceneSubtitle').textContent = id === 'eco_store' ? 'Çatı açık · OEKO-TEX® & GOTS Fabrika Satış Showroom' : id === 'outdoor_complex' ? 'Sosyal Yaşam Terası · 10× 300 kW Solar EV Şarj & Otopark' : id ? 'Çatı açık · İç üretim alanı' : `${view.layout.floor.size.join(' × ')} m · ${view.layout.buildings?.length ?? 0} bina`;
       renderInspector();
     },
     onError: (text) => say(text),
@@ -136,6 +163,14 @@ async function main() {
     const d = view.layout.machines.find((m) => m.id === view.selectedId);
     liveEl = null;
     if (!d) {
+      if (view.openBuildingId === 'eco_store') {
+        insp.innerHTML = `<div class="insp-h">🌿 Dokuma Eco-Tex Mağazası</div><p class="muted">34 × 22 m · 4.6 m yüksekliğinde · Fabrika Satış & Showroom</p><p>OEKO-TEX® Standard 100 ve GOTS sertifikalı organik tekstil koleksiyonlarının sergilendiği amiral mağaza.</p><div class="kv"><span>Kasa & POS</span><span>2 dokunmatik POS + Kraft paketleme</span><span>Ev Tekstili</span><span>Organik havlu, bornoz & keten nevresim</span><span>Koleksiyon</span><span>Butik askılıklar, kumaş & iplik duvarı</span><span>Deneyim</span><span>3 soyunma kabini & VIP Eco-Lounge</span></div>`;
+        return;
+      }
+      if (view.openBuildingId === 'outdoor_complex') {
+        insp.innerHTML = `<div class="insp-h">☕ Açık Kafeterya & EV Otopark</div><p class="muted">98 × 30 m · Sosyal Yaşam Alanı & Şarj İstasyonu</p><p>Personel ve ziyaretçiler için açık hava bahçe kafeteryası, dinlenme kamelyaları ve güneş enerjili elektrikli araç şarj merkezi.</p><div class="kv"><span>Garden Cafe</span><span>Espresso bar, 8 şemsiyeli masa & 3 kamelya</span><span>Rekreasyon</span><span>Süs havuzu, fıskiye & masa tenisi alanı</span><span>EV Supercharger</span><span>10× 300 kW DC hızlı şarj + Solar Carport</span><span>Otopark & Mikro</span><span>18 araçlık otopark + 6'lı E-Scooter şarj</span></div>`;
+        return;
+      }
       const b = view.layout.buildings?.find((b) => b.id === view.openBuildingId);
       insp.innerHTML = b ? `<div class="insp-h">${esc(b.name)}</div><p class="muted">${b.size[0]} × ${b.size[1]} m · ${b.height} m yüksekliğinde</p><p>Çatı ve yakın duvarlar açıldı. İçerideki bir makineye tıklayarak üretimi inceleyin.</p><p class="muted">Yük kapısı: ${b.doors.length} · Binadan çıkmak için Yerleşke görünümünü seçin.</p>` : '<div class="insp-h">Fabrika yerleşkesi</div><p class="muted">Bir binaya tıklayın veya üstteki bina listesinden seçim yapın. Çatısı açılan binada makineleri inceleyebilirsiniz.</p>';
       return;
@@ -317,6 +352,8 @@ async function main() {
   };
   const buildingSelect = $('buildingSelect') as HTMLSelectElement;
   for (const b of layout.buildings ?? []) buildingSelect.add(new Option(b.name, b.id));
+  buildingSelect.add(new Option('🌿 Eco-Tex Mağaza & Showroom', 'eco_store'));
+  buildingSelect.add(new Option('☕ Açık Kafeterya & EV Otopark', 'outdoor_complex'));
   buildingSelect.onchange = () => buildingSelect.value ? view.inspectBuilding(buildingSelect.value) : view.overview();
   ($('lightMode') as HTMLSelectElement).onchange = (e) => { view.lightMode = (e.target as HTMLSelectElement).value as 'auto' | 'day' | 'night'; };
   function setMachineMenu(open:boolean){
@@ -413,7 +450,7 @@ async function main() {
     const f = (e.target as HTMLInputElement).files?.[0];
     if (!f) return;
     try {
-      const imported = upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings(parseLayout(JSON.parse(await f.text()), await fetchDefault())))))))));
+      const imported = upgradeAdmin(upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings(parseLayout(JSON.parse(await f.text()), await fetchDefault()))))))))));
       localStorage.setItem(`${LS_KEY}-backup-${Date.now()}`, JSON.stringify(view.layout));
       reload(imported);
     } catch (error) { say(`İçe aktarılamadı: ${error instanceof Error ? error.message : error}`); }
@@ -426,7 +463,10 @@ async function main() {
     if(!e.repeat && e.code==='KeyF'){e.preventDefault();fullscreenButton.click();}
     if(!e.repeat && e.code==='KeyM'){e.preventDefault();$('btnLeft').click();}
     if (e.code === 'Space') { e.preventDefault(); ($('speedGroup').querySelector('[data-speed="0"]') as HTMLButtonElement).click(); }
-    if (e.code === 'Escape') view.select(null);
+    if (e.code === 'Escape') {
+      if (!adminPanel.hidden) adminPanel.hidden = true;
+      view.select(null);
+    }
     if (view.editMode) {
       if (e.code === 'KeyG') setMode('translate');
       if (e.code === 'KeyR') setMode('rotate');

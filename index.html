@@ -9,15 +9,21 @@
 <body>
   <div id="app" class="collapse-left collapse-right collapse-log">
     <header id="topbar">
-      <div class="brand"><span class="brand-icon">▥</span> <b>DOKUMA<span>FABRİKA SİMÜLASYONU</span></b> <span id="srcKind" class="tag">CANLI SAHA</span></div>
-      <div class="clock"><b id="clock">06:00</b><span id="shift">1. Vardiya</span></div>
-      <div class="group" id="speedGroup">
-        <button data-speed="0" title="Duraklat (Boşluk)">⏸</button>
-        <button data-speed="1">1x</button>
-        <button data-speed="5">5x</button>
-        <button data-speed="20" class="on">20x</button>
-        <button data-speed="60">60x</button>
-        <button data-speed="180">180x</button>
+      <div class="brand">
+        <span class="brand-icon">▥</span>
+        <b>DOKUMA<span>FABRİKA SİMÜLASYONU</span></b>
+        <span id="srcKind" class="tag">CANLI SAHA</span>
+      </div>
+      <div class="sim-controls">
+        <div class="clock"><b id="clock">06:00</b><span id="shift">1. Vardiya</span></div>
+        <div class="group" id="speedGroup">
+          <button data-speed="0" title="Duraklat (Boşluk)">⏸</button>
+          <button data-speed="1">1x</button>
+          <button data-speed="5">5x</button>
+          <button data-speed="20" class="on">20x</button>
+          <button data-speed="60">60x</button>
+          <button data-speed="180">180x</button>
+        </div>
       </div>
       <div class="kpis">
         <div class="kpi"><label>Boyanan</label><b id="kProduced">0 kg</b></div>
@@ -28,28 +34,38 @@
         <div class="kpi"><label>Buhar</label><b id="kSteam">-</b></div>
         <div class="kpi"><label>Boya stoğu</label><b id="kDye">-</b></div>
       </div>
-      <div class="group">
-        <button id="btnLeft" title="Makine menüsünü aç / kapat (M)" aria-controls="left" aria-expanded="false">☰ Makineler</button>
-        <button id="btnFullscreen" title="Tam ekran (F)" aria-label="Tam ekranı aç" aria-pressed="false">⛶ Tam ekran</button>
-        <button id="btnOverview" title="Genel görünüm">Yerleşke</button>
-        <button id="btnCapture" title="Görünümü PNG olarak kaydet">Görsel ↓</button>
-        <select id="buildingSelect" aria-label="Bina seç"><option value="">Tüm yerleşke</option></select>
-        <select id="lightMode" aria-label="Işık modu"><option value="auto">Otomatik ışık</option><option value="day" selected>Gündüz</option><option value="night">Gece</option></select>
-        <label class="chk"><input type="checkbox" id="chkLabels" checked />Etiket</label>
-        <label class="chk"><input type="checkbox" id="chkArrows" />Akış</label>
-        <label class="chk"><input type="checkbox" id="chkPipes" />Boru akışı</label>
-        <label class="chk"><input type="checkbox" id="chkFaults" checked />Arıza</label>
-        <button id="btnEdit" class="accent">✏️ Düzenle</button>
-        <button id="btnRight" title="İnceleme panelini aç / kapat">ⓘ</button>
-        <button id="btnLog" title="Olay günlüğünü aç / kapat">≡</button>
+      <div class="group toolbar-row">
+        <div class="tool-cluster">
+          <button id="btnLeft" title="Makine menüsünü aç / kapat (M)" aria-controls="left" aria-expanded="false">☰ Makineler</button>
+          <button id="btnOverview" title="Genel görünüm">🏛️ Yerleşke</button>
+          <button id="btnFullscreen" title="Tam ekran (F)" aria-label="Tam ekranı aç" aria-pressed="false">⛶ Tam ekran</button>
+          <button id="btnCapture" title="Görünümü PNG olarak kaydet">📸 Görsel ↓</button>
+        </div>
+        <span class="nav-sep"></span>
+        <div class="tool-cluster">
+          <select id="buildingSelect" aria-label="Bina seç"><option value="">🏢 Tüm yerleşke</option></select>
+          <select id="lightMode" aria-label="Işık modu"><option value="auto">🌗 Otomatik ışık</option><option value="day" selected>☀️ Gündüz</option><option value="night">🌙 Gece</option></select>
+        </div>
+        <span class="nav-sep"></span>
+        <div class="tool-cluster toggles">
+          <label class="chk"><input type="checkbox" id="chkLabels" checked /><span>Etiket</span></label>
+          <label class="chk"><input type="checkbox" id="chkArrows" /><span>Akış</span></label>
+          <label class="chk"><input type="checkbox" id="chkPipes" /><span>Boru akışı</span></label>
+          <label class="chk"><input type="checkbox" id="chkFaults" checked /><span>Arıza</span></label>
+        </div>
+        <div class="tool-cluster right-actions">
+          <button id="btnEdit" class="accent">✏️ Düzenle</button>
+          <button id="btnRight" title="İnceleme panelini aç / kapat">ⓘ Detay</button>
+          <button id="btnLog" title="Olay günlüğünü aç / kapat">≡ Günlük</button>
+        </div>
       </div>
     </header>
 
     <aside id="left" inert><div class="menu-heading"><h3>Alanlar &amp; Makineler</h3><button id="btnCloseLeft" title="Makine menüsünü kapat" aria-label="Makine menüsünü kapat">×</button></div><div id="tree"></div></aside>
 
     <main id="stage">
-      <details id="powerPanel" open>
-        <summary>Güneş · Batarya · Şebeke</summary>
+      <details id="powerPanel">
+        <summary>⚡ Güneş · Batarya · Şebeke</summary>
         <div id="powerLive">Elektrik sistemi hazırlanıyor…</div>
         <label><input type="checkbox" id="exportEnabled" checked> Fazla enerjiyi şebekeye sat</label>
         <div class="powerRates"><label>Satış TL/kWh <input id="sellPrice" type="number" min="0" step="0.1" value="2.5"></label><label>Alış TL/kWh <input id="buyPrice" type="number" min="0" step="0.1" value="4"></label></div>

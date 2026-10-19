@@ -7,6 +7,7 @@ import { upgradeRawWarehouse } from './rawLayout';
 import { upgradeShippingWarehouse } from './shippingLayout';
 import { upgradeEnergyCentre } from './energyLayout';
 import { upgradeSolar } from './solar';
+import { upgradeAdmin } from './adminLayout';
 
 const building = (id: string, name: string, center: Point2, size: Point2, height: number, color: string, side: 'north' | 'south' | 'west' = 'south'): BuildingDef => ({
   id, name, center, size, height, color, doors: [{ id: `${id}-load`, side, offset: 0, width: 8, height: 5 }],
@@ -84,7 +85,7 @@ export function createCampus(legacy: Layout): Layout {
       : [[src.position[0], src.position[2]], [-35, -21], [-35, m.position[2]], [m.position[0], m.position[2]]];
     utilityRoutes.push({ from: src.id, to: m.id, kind, points, height: kind === 'steam' ? 8 : 6.5 });
   }
-  return upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings({ version: 2, floor: { center: [0, 0], size: [240, 180] }, areas, machines, buildings, roads, outdoors, utilityRoutes }))))))));
+  return upgradeAdmin(upgradeSolar(upgradeEnergyCentre(upgradeShippingWarehouse(upgradeRawWarehouse(upgradeReceivingHall(upgradeDyeHall(upgradeGarmentHall(combineProcessingBuildings({ version: 2, floor: { center: [0, 0], size: [240, 180] }, areas, machines, buildings, roads, outdoors, utilityRoutes })))))))));
 }
 
 /** Install the reference sewing hall once. Preserve parameters and nonstandard branches. */

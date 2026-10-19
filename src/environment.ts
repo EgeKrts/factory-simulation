@@ -220,32 +220,34 @@ export class CampusEnvironment {
   private details() {
     const steel = material('#53625c', 0.65), fence = material('#788278', 0.55), white = material('#eee9d9'), yellow = material('#dcb34e');
     // Perimeter fencing with a real opening at the southern entrance.
+    // Sınır, yerleşimin zemin alanından türetilir (idari bina için güneye genişletilmiştir).
+    const [fcx, fcz] = this.layout.floor.center, [fw, fd] = this.layout.floor.size, gateShift = fcz + fd / 2 - 1 - 89;
     for (const side of ['north', 'south', 'east', 'west']) {
-      const horizontal = side === 'north' || side === 'south', length = horizontal ? 240 : 180, edge = side === 'north' || side === 'west' ? -1 : 1;
+      const horizontal = side === 'north' || side === 'south', length = horizontal ? fw : fd, edge = side === 'north' || side === 'west' ? -1 : 1;
       for (let s = -length / 2 + 1; s < length / 2; s += 4) {
-        if (side === 'south' && s > -69 && s < -54) continue;
-        const x = horizontal ? s : edge * 119, z = horizontal ? edge * 89 : s;
+        if (side === 'south' && fcx + s > -69 && fcx + s < -54) continue;
+        const x = horizontal ? fcx + s : fcx + edge * (fw / 2 - 1), z = horizontal ? fcz + edge * (fd / 2 - 1) : fcz + s;
         box(this.group, [0.09, 2.6, 0.09], [x, 1.3, z], steel);
         for (const y of [0.4, 1.4, 2.5]) box(this.group, horizontal ? [4, 0.055, 0.055] : [0.055, 0.055, 4], [x + (horizontal ? 2 : 0), y, z + (horizontal ? 0 : 2)], fence);
         for (let offset = 0.5; offset < 4; offset += 0.5) box(this.group, [0.028, 2.3, 0.028], [x + (horizontal ? offset : 0), 1.35, z + (horizontal ? 0 : offset)], fence);
       }
     }
-    box(this.group, [8, 3.2, 6], [-49, 1.6, 85], material('#c8c9bc'));
-    box(this.group, [8.6, 0.25, 6.6], [-49, 3.3, 85], steel);
-    box(this.group, [5, 1.4, 0.1], [-49, 2, 88.06], material('#739a9d', 0.55, 0.15));
-    plaque(this.group, 'GÜVENLİK / GİRİŞ', 7, [-49, 3, 88.18]);
-    box(this.group, [0.7, 1.1, 0.7], [-56, 0.55, 90], yellow);
-    box(this.group, [7.5, 0.12, 0.14], [-60, 1.2, 90], white);
-    for (let x = -63; x < -57; x += 1.2) box(this.group, [0.5, 0.14, 0.17], [x, 1.2, 90], material('#b75742'));
-    plaque(this.group, 'DOKUMA · TEKSTİL YERLEŞKESİ', 20, [-84, 4.5, 91]);
-    for (const x of [-93, -75]) box(this.group, [0.2, 4.5, 0.2], [x, 2.25, 91], steel);
+    box(this.group, [8, 3.2, 6], [-49, 1.6, 85 + gateShift], material('#c8c9bc'));
+    box(this.group, [8.6, 0.25, 6.6], [-49, 3.3, 85 + gateShift], steel);
+    box(this.group, [5, 1.4, 0.1], [-49, 2, 88.06 + gateShift], material('#739a9d', 0.55, 0.15));
+    plaque(this.group, 'GÜVENLİK / GİRİŞ', 7, [-49, 3, 88.18 + gateShift]);
+    box(this.group, [0.7, 1.1, 0.7], [-56, 0.55, 90 + gateShift], yellow);
+    box(this.group, [7.5, 0.12, 0.14], [-60, 1.2, 90 + gateShift], white);
+    for (let x = -63; x < -57; x += 1.2) box(this.group, [0.5, 0.14, 0.17], [x, 1.2, 90 + gateShift], material('#b75742'));
+    plaque(this.group, 'DOKUMA · TEKSTİL YERLEŞKESİ', 20, [-84, 4.5, 91 + gateShift]);
+    for (const x of [-93, -75]) box(this.group, [0.2, 4.5, 0.2], [x, 2.25, 91 + gateShift], steel);
     for (let x = -108; x < 109; x += 27) for (const z of [-6, 12, 78]) {
       if (z === 78 && x > 45) continue;
       cylinder(this.group, 0.09, 6, [x, 3, z], steel);
       box(this.group, [1.5, 0.1, 0.45], [x + 0.6, 6.05, z], this.lamps);
       if (x % 2 === 0 && z === 12) { const light = new THREE.PointLight('#ffdeb1', 0, 25, 2); light.position.set(x, 5.8, z); this.group.add(light); this.lights.push(light); }
     }
-    for (const [x, z] of [[-113,-65],[-113,-35],[-113,35],[112,-65],[112,35],[110,64],[-5,74],[5,70],[100,87],[-98,86],[-14,-82],[53,-75],[76,-72],[99,-75]] as Point2[]) this.tree(x, z);
+    for (const [x, z] of [[-113,-65],[-113,-35],[-113,35],[112,-65],[112,35],[110,64],[-5,74],[5,70],[116,86],[-114.5,92],[-14,-82],[53,-75],[76,-72],[99,-75]] as Point2[]) this.tree(x, z);
     for (let i = 0; i < 28; i++) this.tree(-160 + i * 13, -120 - (i % 4) * 11);
     for (let i = 0; i < 7; i++) this.car(58 + i * 4.6, 80, ['#c3c7b9', '#385e6a', '#825346', '#c6bc9d'][i % 4]);
     for (const b of this.layout.buildings ?? []) {

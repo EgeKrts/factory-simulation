@@ -3,11 +3,11 @@
   "floor": {
     "center": [
       0,
-      0
+      14.5
     ],
     "size": [
       240,
-      180
+      209
     ]
   },
   "areas": [
@@ -2096,7 +2096,7 @@
         ],
         [
           -62,
-          103
+          128
         ]
       ],
       "width": 10
@@ -2106,11 +2106,11 @@
       "points": [
         [
           -180,
-          103
+          128
         ],
         [
           180,
-          103
+          128
         ]
       ],
       "width": 12,
@@ -2245,6 +2245,19 @@
       "size": [
         5,
         10
+      ],
+      "kind": "yard"
+    },
+    {
+      "id": "admin-yard",
+      "name": "Yönetim giriş meydanı",
+      "center": [
+        -15,
+        109.5
+      ],
+      "size": [
+        60,
+        6
       ],
       "kind": "yard"
     }
@@ -3256,5 +3269,6 @@
   "rawRevision": 1,
   "shippingRevision": 2,
   "energyRevision": 3,
-  "solarRevision": 1
+  "solarRevision": 1,
+  "adminRevision": 1
 }

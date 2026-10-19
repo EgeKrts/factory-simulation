@@ -71,7 +71,7 @@ assert.equal(layout.buildings?.length, 7);
 assert(!layout.buildings?.some((b) => b.id === 'finish'));
 assert.equal(buildingOf(layout, layout.machines.find((m) => m.id === 'STENTER-01')!)?.id, 'dye');
 assert.equal(buildingOf(layout, layout.machines.find((m) => m.id === 'INSP-02')!)?.id, 'dye');
-assert.deepEqual(layout.floor.size, [240, 180]);
+assert.deepEqual(layout.floor.size, [240, 209]);
 assert.equal(upgradeRawWarehouse(layout),layout,'Raw warehouse migration must be idempotent.');
 assert.equal(upgradeShippingWarehouse(layout),layout,'Shipping migration must be idempotent.');
 const finishedStore=layout.machines.find(m=>m.id==='WH-01')!,finishedBuilding=layout.buildings!.find(b=>b.id==='warehouse')!;

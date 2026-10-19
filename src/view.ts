@@ -11,6 +11,9 @@ import { buildingOf, placementErrors } from './layout';
 import { CampusRouter, samplePath } from './routes';
 import { animateMachine } from './procedural';
 import { AssetLibrary, fitAsset } from './assets';
+import { createAdminBuilding, type AdminBuilding } from './adminBuilding';
+import { createEcoStore, type EcoStore } from './ecoStore';
+import { createOutdoorComplex, type OutdoorComplex } from './outdoorComplex';
 import { TransportFleet } from './logisticsView';
 import { carrierKind } from './transport';
 import { dressGarmentModel, sewingModules, animateGarment } from './garmentView';
@@ -48,6 +51,8 @@ export interface ViewCallbacks {
   onSelect(id: string | null): void;
   onLayoutEdited(structural: boolean): void;
   onBuildingSelect?(id: string | null): void;
+  /** İdari bina kat kesiti açıldı/kapandı ya da kat/birim değişti. */
+  onAdminChange?(open: boolean, floor: number, unitId: string | null): void;
   onError?(text: string): void;
 }
 
@@ -112,6 +117,7 @@ export class FactoryView {
   constructor(private canvas: HTMLCanvasElement, private cb: ViewCallbacks) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1));
+    this.renderer.localClippingEnabled = true;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -268,8 +274,24 @@ export class FactoryView {
     this.envGroup.clear();
     this.campus = new CampusEnvironment(this.layout);
     this.envGroup.add(this.campus.group);
+    if (this.adminBuilding) { this.adminBuilding.setLabelsVisible(this.showLabels); this.envGroup.add(this.adminBuilding.group); }
+    else this.adminLoad ??= createAdminBuilding(this.assets).then((a) => { if (a) { this.adminBuilding = a; a.setLabelsVisible(this.showLabels); this.envGroup.add(a.group); this.dirty = true; } });
+    this.ecoStore ??= createEcoStore();
+    this.ecoStore.setOpen(this.openBuildingId === 'eco_store');
+    this.ecoStore.setLabelsVisible(this.showLabels && this.openBuildingId === 'eco_store');
+    this.envGroup.add(this.ecoStore.group);
+    this.outdoorComplex ??= createOutdoorComplex();
+    this.outdoorComplex.setLabelsVisible(this.showLabels);
+    this.envGroup.add(this.outdoorComplex.group);
     this.router = new CampusRouter(this.layout);
   }
+  private adminBuilding?: AdminBuilding;
+  private ecoStore?: EcoStore;
+  private outdoorComplex?: OutdoorComplex;
+  adminOpen = false;
+  adminFloor = 0;
+  adminUnitId: string | null = null;
+  private adminLoad?: Promise<void>;
 
   private textSprite(text: string, color: string, px = 40, dot?: string): THREE.Sprite {
     const c = document.createElement('canvas');
@@ -478,11 +500,27 @@ export class FactoryView {
     this.raycaster.setFromCamera(ndc, this.camera);
     const roots = [...this.machines.values()].filter((m) => !buildingOf(this.layout, m.def) || buildingOf(this.layout, m.def)?.id === this.openBuildingId).map((m) => m.root);
     roots.push(...[...this.campus.buildings.values()].map((b) => b.group));
+    if (this.adminBuilding) roots.push(this.adminBuilding.group);
+    if (this.ecoStore) roots.push(this.ecoStore.group);
+    if (this.outdoorComplex) roots.push(this.outdoorComplex.group);
     const visible = (object: THREE.Object3D): boolean => { for (let o: THREE.Object3D | null = object; o; o = o.parent) if (!o.visible && !o.userData.renderBatched) return false; return true; };
-    const hit = this.raycaster.intersectObjects(roots, true).find((h) => visible(h.object) && !h.object.userData.noPick && !(h.object as THREE.Sprite).isSprite && !(h.object as THREE.LineSegments).isLineSegments);
+    const inAdmin = (object: THREE.Object3D): boolean => { for (let o: THREE.Object3D | null = object; o; o = o.parent) if (o.userData.adminBuilding) return true; return false; };
+    const hit = this.raycaster.intersectObjects(roots, true).find((h) => visible(h.object) && !(this.adminBuilding && inAdmin(h.object) && this.adminBuilding.clipped(h.point.y)) && !h.object.userData.noPick && !(h.object as THREE.Sprite).isSprite && !(h.object as THREE.LineSegments).isLineSegments);
     if (!hit) { this.select(null); return; }
     let o: THREE.Object3D | null = hit.object;
-    while (o && !o.userData.machineId && !o.userData.buildingId) o = o.parent;
+    while (o && !o.userData.machineId && !o.userData.buildingId && !o.userData.adminBuilding && !o.userData.ecoStore && !o.userData.outdoorComplex) o = o.parent;
+    if (o?.userData.adminBuilding) {
+      if (!this.adminOpen) this.openAdmin();
+      else {
+        const u = this.adminBuilding?.unitAt(hit.point);
+        if (u) this.focusAdminUnit(u.id);
+        else this.adminChanged();
+      }
+      return;
+    }
+    this.closeAdmin();
+    if (o?.userData.ecoStore) { this.inspectBuilding('eco_store'); return; }
+    if (o?.userData.outdoorComplex) { this.inspectBuilding('outdoor_complex'); return; }
     if (o?.userData.machineId) this.select(o.userData.machineId as string);
     else if (o?.userData.buildingId) this.inspectBuilding(o.userData.buildingId as string);
   }
@@ -501,15 +539,58 @@ export class FactoryView {
     this.flyTo = { pos: target.clone().add(dir.multiplyScalar(dist)), target: target.clone() };
   }
 
+  get adminUnits() { return this.adminBuilding?.units ?? []; }
+  get adminFloors() { return this.adminBuilding?.floors ?? 0; }
+  private adminChanged() { this.dirty = true; this.cb.onAdminChange?.(this.adminOpen, this.adminFloor, this.adminUnitId); }
+  /** İdari binaya gir: seçilen katın üstü kesilir, kamera binayı kesit halinde gösterir. */
+  openAdmin(floor = 0) {
+    const a = this.adminBuilding; if (!a) return;
+    this.adminOpen = true; this.openBuildingId = null; this.select(null); this.updateVisibility(); this.cb.onBuildingSelect?.(null);
+    this.adminFloor = floor; this.adminUnitId = null; a.setFloor(floor); a.highlight(null);
+    this.flyTo = a.overview(); this.adminChanged();
+  }
+  /** Kat kesitini değiştir (-1: tüm bina kapalı görünüm). */
+  setAdminFloor(floor: number) {
+    const a = this.adminBuilding; if (!a || !this.adminOpen) return;
+    this.adminFloor = floor; this.adminUnitId = null; a.setFloor(floor); a.highlight(null);
+    this.flyTo = a.overview(); this.adminChanged();
+  }
+  /** Birim kartına tıklanınca: o katın kesitini aç, birimi vurgula ve kamerayı oraya götür. */
+  focusAdminUnit(id: string) {
+    const a = this.adminBuilding, u = a?.units.find((x) => x.id === id); if (!a || !u) return;
+    if (!this.adminOpen) { this.adminOpen = true; this.openBuildingId = null; this.select(null); this.updateVisibility(); this.cb.onBuildingSelect?.(null); }
+    this.adminFloor = u.floor; this.adminUnitId = id; a.setFloor(u.floor); a.highlight(id);
+    const f = a.focus(id); if (f) this.flyTo = f;
+    this.adminChanged();
+  }
+  closeAdmin() {
+    if (!this.adminOpen) return;
+    this.adminOpen = false; this.adminUnitId = null; this.adminBuilding?.setFloor(-1); this.adminBuilding?.highlight(null); this.adminChanged();
+  }
+
   overview() {
-    this.openBuildingId = null; this.select(null); this.updateVisibility(); this.cb.onBuildingSelect?.(null);
+    this.closeAdmin(); this.openBuildingId = null; this.select(null); this.updateVisibility(); this.cb.onBuildingSelect?.(null);
     this.flyTo = { pos: new THREE.Vector3(155, 150, 195).multiplyScalar(this.overviewScale), target: new THREE.Vector3(0, 0, 0) };
   }
 
   inspectBuilding(id: string, fly = true) {
+    if (id === 'eco_store' && this.ecoStore) {
+      this.openBuildingId = 'eco_store'; this.closeAdmin();
+      if (fly) this.select(null);
+      this.updateVisibility(); this.cb.onBuildingSelect?.('eco_store');
+      if (fly) this.flyTo = this.ecoStore.overview();
+      return;
+    }
+    if (id === 'outdoor_complex' && this.outdoorComplex) {
+      this.openBuildingId = 'outdoor_complex'; this.closeAdmin();
+      if (fly) this.select(null);
+      this.updateVisibility(); this.cb.onBuildingSelect?.('outdoor_complex');
+      if (fly) this.flyTo = this.outdoorComplex.overview();
+      return;
+    }
     const b = this.campus.buildings.get(id)?.def;
     if (!b) return;
-    this.openBuildingId = id;
+    this.openBuildingId = id; this.closeAdmin();
     if (fly) this.select(null);
     this.updateVisibility(); this.cb.onBuildingSelect?.(id);
     if (fly) {
@@ -521,6 +602,10 @@ export class FactoryView {
     }
   }
   private updateVisibility() {
+    this.adminBuilding?.setLabelsVisible(this.showLabels);
+    this.ecoStore?.setOpen(this.openBuildingId === 'eco_store');
+    this.ecoStore?.setLabelsVisible(this.showLabels && this.openBuildingId === 'eco_store');
+    this.outdoorComplex?.setLabelsVisible(this.showLabels);
     for (const mv of this.machines.values()) {
       const b = buildingOf(this.layout, mv.def);
       mv.root.visible = !b || b.id === this.openBuildingId;
@@ -823,8 +908,9 @@ export class FactoryView {
     if (this.receivingHall) this.receivingHall.interior.visible = this.openBuildingId === 'receiving';
     const receivingSource=this.layout.machines.find(m=>m.id==='ENTRY-01');
     const deliveryX=this.receivingHall?(receivingSource?.position[0]??-103.5):-87;
-    const deliveryRoute: [number, number][] = [[deliveryX, this.receivingHall ? -9 : -19], [deliveryX, 3], [-62, 3], [-62, 103], [-110, 103]];
-    const shippingRoute: [number, number][] = this.shippingWarehouse ? [[-65,53],[-62,53],[-62,79],[-62,103],[0,103]] : [[-27, 77], [-27, 79], [-62, 79], [-62, 103], [0, 103]];
+    const publicZ = this.layout.roads?.find((r) => r.id === 'public')?.points[0][1] ?? 103;
+    const deliveryRoute: [number, number][] = [[deliveryX, this.receivingHall ? -9 : -19], [deliveryX, 3], [-62, 3], [-62, publicZ], [-110, publicZ]];
+    const shippingRoute: [number, number][] = this.shippingWarehouse ? [[-65,53],[-62,53],[-62,79],[-62,publicZ],[0,publicZ]] : [[-27, 77], [-27, 79], [-62, 79], [-62, publicZ], [0, publicZ]];
     this.animateTruck(this.deliveryTruck, deliveryRoute, this.truckDepartAt);
     const departing = this.shippingDepartAt >= 0 && this.latestTime - this.shippingDepartAt < 100;
     this.shippingTruck.visible = departing;
